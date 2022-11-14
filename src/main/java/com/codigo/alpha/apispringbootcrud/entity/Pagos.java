@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import java.util.Date;
 
@@ -13,8 +12,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "NoPagos")
-public class NoPagos {
+@Table(name = "Pagos")
+public class Pagos {
 
     @Id
     @GeneratedValue
@@ -22,6 +21,7 @@ public class NoPagos {
     private int idComision;
     @Temporal(TemporalType.DATE)
     private Date fechaNoPago;
+    private int comisionPagada;
 
 
 }

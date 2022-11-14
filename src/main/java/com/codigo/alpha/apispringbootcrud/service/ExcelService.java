@@ -1,10 +1,9 @@
 package com.codigo.alpha.apispringbootcrud.service;
 
 import com.codigo.alpha.apispringbootcrud.entity.Comision;
-import com.codigo.alpha.apispringbootcrud.entity.NoPagos;
+import com.codigo.alpha.apispringbootcrud.entity.Pagos;
 import com.codigo.alpha.apispringbootcrud.helper.ExcelHelper;
 import com.codigo.alpha.apispringbootcrud.repositoty.ComisionRepository;
-import com.codigo.alpha.apispringbootcrud.repositoty.NoPagosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +20,7 @@ public class ExcelService {
     ComisionRepository repository;
 
     @Autowired
-    NoPagosService noPagosService;
+    PagosService pagosService;
 
     public void save(MultipartFile file) {
         try {
@@ -35,22 +34,25 @@ public class ExcelService {
     public Integer calculateComision(MultipartFile file){
         List<Comision> bd = repository.findAll();
         Integer sum = 0;
-        List<NoPagos> noPagosList = new ArrayList<NoPagos>();
+        List<Pagos> pagosList = new ArrayList<Pagos>();
         try {
             List<Comision> comisions = ExcelHelper.excelRead(file.getInputStream());
-            System.out.println(bd.size());
-            System.out.println(comisions.size());
-            for (int i = 0; i < comisions.size(); i++) {
+            for (int i = 0; i < bd.size(); i++) {
+                Pagos pagos = new Pagos();
 
-                for (int j = 0; j < bd.size(); j++) {
-                    if(comisions.get(i).getDocUsuario().equalsIgnoreCase(bd.get(j).getDocUsuario()) && comisions.get(i).getContrato().equalsIgnoreCase(bd.get(j).getContrato())){
-                        if(bd.get(j).getComision()>0){
-                            sum = sum + bd.get(j).getComision();
-                        }else{
-                            NoPagos noPagos = new NoPagos();
-                            noPagos.setIdComision(bd.get(j).getId());
-                            noPagos.setFechaNoPago(new Date());
-                            noPagosList.add(noPagos);
+                for (int j = 0; j < comisions.size(); j++) {
+                    if(comisions.get(j).getDocUsuario().equalsIgnoreCase(bd.get(i).getDocUsuario()) && comisions.get(j).getContrato().equalsIgnoreCase(bd.get(i).getContrato())){
+                        if(comisions.get(j).getComision()>0){
+                            sum = sum + comisions.get(j).getComision();
+                            pagos.setIdComision(bd.get(i).getId());
+                            pagos.setFechaNoPago(new Date());
+                            pagos.setComisionPagada(comisions.get(j).getComision());
+                            pagosList.add(pagos);
+                        }else if(comisions.get(j).getComision()<=0){
+                            pagos.setIdComision(bd.get(i).getId());
+                            pagos.setFechaNoPago(new Date());
+                            pagos.setComisionPagada(0);
+                            pagosList.add(pagos);
 
                         }
 
@@ -59,8 +61,8 @@ public class ExcelService {
                 }
 
             }
-            if(noPagosList.size()>0)
-            noPagosService.saveAll(noPagosList);
+            if(pagosList.size()>0)
+            pagosService.saveAll(pagosList);
 
         } catch (IOException e) {
             throw new RuntimeException("fail to store excel data: " + e.getMessage());
