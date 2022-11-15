@@ -14,7 +14,7 @@
     <name>api-spring-boot-crud</name>
     <description>api-spring-boot-crud</description>
     <properties>
-        <java.version>8</java.version>
+        <java.version>1.8</java.version>
     </properties>
     <dependencies>
 
