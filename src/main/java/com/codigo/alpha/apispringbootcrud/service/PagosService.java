@@ -30,4 +30,9 @@ public class PagosService {
     public List<PagosDTO> findByFecha(Date fecha, String busqueda){
         return mapper.mapping(repository.pagaron(fecha, busqueda));
     }
+
+
+    public void deleteAll(){
+
+    }
 }

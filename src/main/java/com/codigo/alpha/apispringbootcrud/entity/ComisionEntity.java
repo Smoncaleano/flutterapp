@@ -2,6 +2,7 @@ package com.codigo.alpha.apispringbootcrud.entity;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +17,8 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Entity
 @Table(name = "Comisiones")
-public class Comision {
+@Builder
+public class ComisionEntity {
 
     @Id
     @GeneratedValue
@@ -52,4 +54,5 @@ public class Comision {
     private String factorDeLiq;
     private Integer comision;
     private String regional;
+    private boolean activo;
 }

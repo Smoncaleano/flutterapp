@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.codigo.alpha.apispringbootcrud.entity.Comision;
+import com.codigo.alpha.apispringbootcrud.dto.UpdateDTO;
+import com.codigo.alpha.apispringbootcrud.entity.ComisionEntity;
+import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -14,16 +16,12 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.xml.transform.sax.SAXSource;
-
+@Log4j2
 
 public class ExcelHelper {
 
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    static String[] HEADERs = {
-    "CICLO", "PERIODO", "CONCEPTO", "TIPO ASESOR", "CATEGORÍA", "COD ASESOR", "NIT ASESOR", "NOMBRE CORREDOR" , "TIP DOC CONTRATANTE", "NIT CONTRATANTE", "NOMBRE CONTRATANTE",
-    "LINEA", "PLAN", "PROGRAMA", "SUBPROGRAMA",	"TIP DOC USUARIO", "DOC USUARIO", "NOMBRE USUARIO",	"SUC", "CONTRATO", "FAMILIA", "USUARIO", "TIP NOVEDAD", "NOVEDAD", "TIPO CONTRATO",
-    "R/C", "VALOR CUOTA", "VALOR RECAUDO CUOTA", "FACTOR DE LIQ", "COMISION", "REGIONAL"};
+
 
     static String SHEET = "Hoja1";
 
@@ -36,14 +34,14 @@ public class ExcelHelper {
         return true;
     }
 
-    public static List<Comision> excelRead(InputStream is) {
+    public static List<ComisionEntity> excelRead(InputStream is) {
         try {
             Workbook workbook = new XSSFWorkbook(is);
 
             Sheet sheet = workbook.getSheet(SHEET);
             Iterator<Row> rows = sheet.iterator();
 
-            List<Comision> comisions = new ArrayList<Comision>();
+            List<ComisionEntity> comisions = new ArrayList<ComisionEntity>();
 
             int rowNumber = 0;
             while (rows.hasNext()) {
@@ -57,131 +55,130 @@ public class ExcelHelper {
 
                 Iterator<Cell> cellsInRow = currentRow.iterator();
 
-                Comision comision = new Comision();
+                ComisionEntity comision = new ComisionEntity();
 
                 int cellIdx = 0;
                 while (cellsInRow.hasNext()) {
                     Cell currentCell = cellsInRow.next();
 
-
-
                     switch (cellIdx) {
                         case 0:
-                            comision.setCiclo(String.valueOf((int) currentCell.getNumericCellValue()));
+                            comision.setCiclo( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
+
 
                             break;
 
                         case 1:
-                            comision.setPeriodo(String.valueOf((int) currentCell.getNumericCellValue()));
+                            comision.setPeriodo( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
 
                             break;
 
                         case 2:
-                            comision.setConcepto(currentCell.getStringCellValue());
+                            comision.setConcepto( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 3:
-                            comision.setTipoAsesor(currentCell.getStringCellValue());
+                            comision.setTipoAsesor( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
                         case 4:
-                            comision.setCategoria(currentCell.getStringCellValue());
+                            comision.setCategoria( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 5:
-                            comision.setCodAsesor(String.valueOf((int) currentCell.getNumericCellValue()));
+                            comision.setCodAsesor( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 6:
-                            comision.setNitAsesor(String.valueOf((int) currentCell.getNumericCellValue()));
+                            comision.setNitAsesor( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 7:
-                            comision.setNombreCorredor(currentCell.getStringCellValue());
+                            comision.setNombreCorredor( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
                         case 8:
-                            comision.setTipoDocumentoContratante(currentCell.getStringCellValue());
+                            comision.setTipoDocumentoContratante( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 9:
-                            comision.setNitContratante(currentCell.getStringCellValue());
+                            comision.setNitContratante( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 10:
-                            comision.setNombreContratante(currentCell.getStringCellValue());
+                            comision.setNombreContratante( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 11:
-                            comision.setLinea(currentCell.getStringCellValue());
+                            comision.setLinea( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
                         case 12:
-                            comision.setPlan(currentCell.getStringCellValue());
+                            comision.setPlan( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 13:
-                            comision.setPrograma(currentCell.getStringCellValue());
+                            comision.setPrograma( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 14:
-                            comision.setSubprograma(currentCell.getStringCellValue());
+                            comision.setSubprograma( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 15:
-                            comision.setTipDocUsuario(currentCell.getStringCellValue());
+                            comision.setTipDocUsuario( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
                         case 16:
-                            comision.setDocUsuario(currentCell.getStringCellValue());
+                            comision.setDocUsuario( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 17:
-                            comision.setNombreUsuario(currentCell.getStringCellValue());
+                            comision.setNombreUsuario( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 18:
-                            comision.setSuc(currentCell.getStringCellValue());
+                            comision.setSuc( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 19:
-                            comision.setContrato(currentCell.getStringCellValue());
+                            comision.setContrato( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
                         case 20:
-                            comision.setFamilia(currentCell.getStringCellValue());
+                            comision.setFamilia( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 21:
-                            comision.setUsuario(currentCell.getStringCellValue());
+                            comision.setUsuario( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 22:
-                            comision.setTipoNovedad(currentCell.getStringCellValue());
+                            comision.setTipoNovedad( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 23:
-                            comision.setNovedad(currentCell.getStringCellValue());
+                            comision.setNovedad( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
                         case 24:
-                            comision.setTipoContrato(currentCell.getStringCellValue());
+                            comision.setTipoContrato( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 25:
-                            comision.setRc(currentCell.getStringCellValue());
+                            comision.setRc( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 26:
-                            comision.setValorCuota(String.valueOf((int) currentCell.getNumericCellValue()));
+                            comision.setValorCuota( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
                         case 27:
-                            comision.setValorRecaudoCuota(String.valueOf((int) currentCell.getNumericCellValue()));
+                            comision.setValorRecaudoCuota( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 28:
-                            comision.setFactorDeLiq(String.valueOf((int) currentCell.getNumericCellValue()));
+                            comision.setFactorDeLiq( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         case 29:
-                            comision.setComision((int) currentCell.getNumericCellValue());
+                            comision.setComision(Integer.valueOf(currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue()));
                             break;
                         case 30:
-                            comision.setRegional(currentCell.getStringCellValue());
+                            comision.setRegional( currentCell.getCellType().toString().equalsIgnoreCase("NUMERIC")?String.valueOf((int) currentCell.getNumericCellValue()):currentCell.getStringCellValue());
                             break;
 
                         default:
@@ -201,5 +198,79 @@ public class ExcelHelper {
             throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
         }
     }
+
+
+
+    public static List<UpdateDTO> excelReadUpdate(InputStream is) {
+        try {
+            Workbook workbook = new XSSFWorkbook(is);
+
+            Sheet sheet = workbook.getSheet(SHEET);
+            Iterator<Row> rows = sheet.iterator();
+
+            List<UpdateDTO> updateDTOS = new ArrayList<UpdateDTO>();
+
+            int rowNumber = 0;
+            while (rows.hasNext()) {
+                Row currentRow = rows.next();
+
+                // skip header
+                if (rowNumber == 0) {
+                    rowNumber++;
+                    continue;
+                }
+
+                Iterator<Cell> cellsInRow = currentRow.iterator();
+
+                UpdateDTO comision = new UpdateDTO();
+
+                int cellIdx = 0;
+                while (cellsInRow.hasNext()) {
+                    Cell currentCell = cellsInRow.next();
+                    switch (cellIdx) {
+                        case 0:
+                            comision.setNitContratante(currentCell.getStringCellValue());
+
+                            break;
+
+                        case 1:
+                            comision.setNombreContratante(currentCell.getStringCellValue());
+
+                            break;
+
+                        case 2:
+                            comision.setDocUsuario(currentCell.getStringCellValue());
+                            break;
+
+                        case 3:
+                            comision.setNombreUsario(currentCell.getStringCellValue());
+                            break;
+                        case 4:
+                            comision.setValorCuota(String.valueOf((int) currentCell.getNumericCellValue()));
+                            break;
+
+                        case 5:
+                            comision.setComision(String.valueOf((int) currentCell.getNumericCellValue()));
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    cellIdx++;
+                }
+
+                updateDTOS.add(comision);
+            }
+
+            workbook.close();
+
+            return updateDTOS;
+        } catch (IOException e) {
+            throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
+        }
+    }
+
+
 
 }
